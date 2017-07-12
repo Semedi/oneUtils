@@ -1,0 +1,11 @@
+#!/bin/bash
+
+run="/var/run/one"
+lock="/var/lock/one"
+user="semedi"
+
+if [ ! -d $run ]; then mkdir $run; fi
+if [ ! -d $lock ]; then mkdir $lock; fi
+
+chown -R $user:$user $run
+chown -R $user:$user $lock
