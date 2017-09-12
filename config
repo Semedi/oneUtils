@@ -1,0 +1,6 @@
+services:
+    azure:
+        region_name:
+        pem_management_cert:
+        subscription_id:
+        management_endpoint:
