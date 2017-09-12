@@ -1,0 +1,70 @@
+#!/usr/bin/env ruby
+#
+require "azure"
+require "yaml"
+
+def ask
+    puts
+    puts "*********************"
+    puts "Choose Option:
+    0. Exit
+    1. List Storage Accounts
+    2. Delete all storage Accounts
+    3. List all vm images
+    "
+    puts "*********************"
+    puts
+    n = gets.chomp.to_i
+end
+
+def get_sa
+    puts "please wait..."
+    sm = Azure.storage_management
+    sm.list_storage_accounts.each do |storage|
+        puts storage.name
+    end
+end
+
+# Get a list of available virtual machine images
+def get_vmi
+    puts "please wait..."
+    vm_image_management = Azure.vm_image_management
+    vm_image_management.list_virtual_machine_images.each do |vm|
+        puts vm.name
+    end
+end
+
+CONFIG = "config"
+@account = YAML::load(File.read(CONFIG))
+
+_services = @account['services']
+_az = _services['azure']
+
+Azure.configure do |config|
+          config.management_certificate = _az['pem_management_cert']
+          config.subscription_id        = _az['subscription_id']
+          config.management_endpoint    = _az['management_endpoint']
+end
+
+
+puts "************************"
+puts "****AZURE CLASSIC*******"
+puts "************************"
+
+n = -1
+while n != 0 do
+    n = ask
+    case n
+      when 0
+        puts "bye"
+      when 1
+        get_sa
+      when 2
+      when 3
+        get_vmi
+      when 4
+        # code
+      else
+        puts "not valid!"
+    end
+end
