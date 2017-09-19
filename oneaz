@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+
+ONE_CLI = "/usr/lib/one/ruby/cli"
+
+if File.directory?(ONE_CLI)
+    $: << ONE_CLI
+else
+    require 'opennebula'
+end
+
+cmd=CommandParser::CmdParser.new(ARGV) do
+    usage "`oneaz` <command> [<args>] [<options>]"
+
+    ########################################################################
+    # Global Options
+    ########################################################################
+end

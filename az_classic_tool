@@ -12,6 +12,7 @@ def ask
     1. List Storage Accounts
     2. Delete all storage Accounts
     3. List all vm images
+    4. List Cloud Services
     "
     puts "*********************"
     puts
@@ -23,6 +24,16 @@ def get_sa
     sm = Azure.storage_management
     sm.list_storage_accounts.each do |storage|
         puts storage.name
+        sm.delete_storage_account(storage.name)
+    end
+end
+
+def get_cs
+    puts "please wait..."
+    cm = Azure.cloud_service_management
+    cm.list_cloud_services.each do |service|
+        puts service.name
+        cm.delete_cloud_service(service.name)
     end
 end
 
@@ -60,13 +71,14 @@ while n != 0 do
     n = ask
     case n
       when 0
-        puts "bye"
+          puts "bye"
       when 1
-        get_sa
+          get_sa
       when 2
       when 3
-        get_vmi
+          get_vmi
       when 4
+          get_cs
         # code
       else
         puts "not valid!"
