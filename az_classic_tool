@@ -24,7 +24,19 @@ def get_sa
     sm = Azure.storage_management
     sm.list_storage_accounts.each do |storage|
         puts storage.name
-        sm.delete_storage_account(storage.name)
+    end
+end
+
+def rm_sa
+    puts "please wait..."
+    sm = Azure.storage_management
+    sm.list_storage_accounts.each do |storage|
+        begin
+            sm.delete_storage_account(storage.name)
+            puts "    #{storage.name} removed"
+        rescue exception e
+            puts "cannot delete #{storage.name}"
+            puts "due to #{e.message}"
     end
 end
 
@@ -75,6 +87,7 @@ while n != 0 do
       when 1
           get_sa
       when 2
+          rm_sa
       when 3
           get_vmi
       when 4
