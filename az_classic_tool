@@ -34,9 +34,10 @@ def rm_sa
         begin
             sm.delete_storage_account(storage.name)
             puts "    #{storage.name} removed"
-        rescue exception e
+        rescue Exception => e
             puts "cannot delete #{storage.name}"
             puts "due to #{e.message}"
+        end
     end
 end
 
@@ -77,6 +78,7 @@ end
 puts "************************"
 puts "****AZURE CLASSIC*******"
 puts "************************"
+puts
 
 n = -1
 while n != 0 do
