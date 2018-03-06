@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# this example only change two templates with ids 19 and 20
+export EDITOR="sed -i -e's/TOREPLACE/REPLACE_TEXT/g'"
+
+while read i
+do
+    onetemplate update $i
+done <<< '19
+20'

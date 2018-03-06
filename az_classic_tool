@@ -2,7 +2,6 @@
 #
 require "azure"
 require "yaml"
-require "pry"
 
 def ask
     puts
@@ -13,6 +12,7 @@ def ask
     2. Delete all storage Accounts
     3. List all vm images
     4. List Cloud Services
+    5. List all disks
     "
     puts "*********************"
     puts

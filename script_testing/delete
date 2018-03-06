@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# this example only deletes RESERVED_MEM and RESERVED_CPU
+# for hosts 0 and 1
+
+# remove -i option to test
+export EDITOR="sed -i '/RESERVED_MEM/d; /RESERVED_CPU/d'"
+
+while read i
+do
+    onehost update $i
+done <<< '0
+1'
