@@ -17,62 +17,63 @@ key="$1"
 
 case $key in
     -s|--snap)
-    new_dir=$ONE_BAK/$2_$(date +%F_%R)
-    mkdir $new_dir
+        new_dir=$ONE_BAK/$2_$(date +%F_%R)
+        mkdir $new_dir
 
-    cp $ONE_VAR/one.db $new_dir
-    cp -R $ONE_VAR/.one $new_dir
-    shift # past argument
-    shift # past argument
-    ;;
+        cp $ONE_VAR/one.db $new_dir
+        cp -R $ONE_VAR/.one $new_dir
+        shift # past argument
+        shift # past argument
+        ;;
     -l|--list)
-    SEARCHPATH="$2"
-    for i in `ls -t $ONE_BAK `; do echo $i; done;
-    shift # past argument
-    ;;
+        SEARCHPATH="$2"
+        id=0
+        for i in `ls -t $ONE_BAK `;
+        do
+            echo $id $i
+            let "id+=1"
+        done;
+        shift # past argument
+        ;;
     -c|--clean)
-    LIBPATHS="$2"
-    index=0
-    i=-1
-    for folder in `ls -t $DB_BAK`;
-    do
-        let "i+=1"
-        if [ $index -eq $i ]; then continue; fi
-        rm -R $ONE_BAK/$folder
-    done;
-    shift # past argument
-    ;;
+        LIBPATHS="$2"
+        index=0
+        i=-1
+        for folder in `ls -t $ONE_BAK`;
+        do
+            let "i+=1"
+            if [ $index -eq $i ]; then continue; fi
+            rm -R $ONE_BAK/$folder
+        done;
+        shift # past argument
+        ;;
     -r|--revert)
-    index_revert="$2"
-    i=-1
-    for dir in `ls -t $DB_BAK`;
-    do
-        let "i+=1"
-        if [ $index_revert -eq $i ];
-        then
-            echo $dir;
-        fi
-    done;
-    shift # past argument
-    shift # past value
-    ;;
+        index_revert="$2"
+        i=-1
+        for dir in `ls -t $ONE_BAK`;
+        do
+            let "i+=1"
+            if [ $index_revert -eq $i ];
+            then
+                path=$ONE_BAK/$dir
+                cp -R $path/.one $ONE_VAR/.one
+                cp $path/one.db $ONE_VAR/one.db
+            fi
+        done;
+        shift # past argument
+        shift # past value
+        ;;
     --default)
-    DEFAULT=YES
-    shift # past argument
-    ;;
+        DEFAULT=YES
+        shift # past argument
+        ;;
     *)    # unknown option
-    POSITIONAL+=("$1") # save it in an array for later
-    shift # past argument
-    ;;
+        POSITIONAL+=("$1") # save it in an array for later
+        shift # past argument
+        ;;
 esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
-
-echo FILE EXTENSION  = "${EXTENSION}"
-echo SEARCH PATH     = "${SEARCHPATH}"
-echo LIBRARY PATH    = "${LIBPATH}"
-echo DEFAULT         = "${DEFAULT}"
-echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
 
 if [[ -n $1 ]]; then
     echo "Last line of file specified as non-opt/last argument:"
