@@ -7,6 +7,17 @@ ONE_VAR=/var/lib/one
 
 ONE_BAK=$ONE_VAR/.bak
 
+function new_model {
+    cp $ONE_VAR/one.db $ONE_VAR/one.db.bak
+    rm -R $ONE_VAR/one.db
+    rm -R $ONE_VAR/.one
+    mkdir $ONE_VAR/.one
+
+    echo $1:$2 > $ONE_VAR/.one/one_auth
+}
+
+
+
 # create folders:
 if [ ! -d $ONE_BAK ]; then mkdir $ONE_BAK; fi
 
@@ -33,6 +44,10 @@ case $key in
             echo $id $i
             let "id+=1"
         done;
+        shift # past argument
+        ;;
+    -n|--new)
+        new_model oneadmin opennebula
         shift # past argument
         ;;
     -c|--clean)

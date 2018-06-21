@@ -12,7 +12,7 @@ def ask
     2. Delete all storage Accounts
     3. List all vm images
     4. List Cloud Services
-    5. List all disks
+    5. List image names
     "
     puts "*********************"
     puts
@@ -54,11 +54,20 @@ end
 def get_vmi
     puts "please wait..."
     vm_image_management = Azure.vm_image_management
-    vm_image_management.list_virtual_machine_images.each do |vm|
+    vm_image_management.list_virtual_machine_images.each do |image|
+        puts "#{image.os_type}"
+        puts "      locations: #{image.locations}"
+        puts "      name     : #{image.name}"
         puts
-        puts vm.name
-        puts vm.locations
-        puts
+    end
+end
+
+
+require 'pry'
+def get_image_names
+#Get a list of available virtual machine images
+    vm_image_management = Azure.vm_image_management
+    vm_image_management.list_os_images.each do |image|
     end
 end
 
@@ -94,6 +103,8 @@ while n != 0 do
           get_vmi
       when 4
           get_cs
+      when 5
+          get_image_names
         # code
       else
         puts "not valid!"
