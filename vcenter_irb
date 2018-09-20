@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+ONE_LOCATION=ENV["ONE_LOCATION"] if !defined?(ONE_LOCATION)
+
+if !ONE_LOCATION
+    RUBY_LIB_LOCATION="/usr/lib/one/ruby" if !defined?(RUBY_LIB_LOCATION)
+else
+    RUBY_LIB_LOCATION=ONE_LOCATION+"/lib/ruby" if !defined?(RUBY_LIB_LOCATION)
+end
+
+$: << RUBY_LIB_LOCATION
+$: << File.dirname(__FILE__)
+
+require 'vcenter_driver'
+
+def vclient_host(id)
+    vi_client = VCenterDriver::VIClient.new_from_host(id)
+end
+
+def vm(vmid)
+    one_vm = VCenterDriver::VIHelper.one_item(OpenNebula::VirtualMachine, vmid)
+    did    = one_vm["DEPLOY_ID"]
+    hid    =one_vm.retrieve_xmlelements("HISTORY_RECORDS/HISTORY/HID").last.text.to_i
+    VCenterDriver::VirtualMachine.new_one(vclient_host(hid), did, one_vm)
+end
+
+version = ">= 0"
+gem 'pry', version
+
+load Gem.bin_path('pry', 'pry', version)

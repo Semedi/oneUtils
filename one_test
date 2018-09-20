@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ONE_LOCATION=/home/semedi/Workspace/one
 ONE_VAR=/var/lib/one
 
@@ -15,8 +14,6 @@ function new_model {
 
     echo $1:$2 > $ONE_VAR/.one/one_auth
 }
-
-
 
 # create folders:
 if [ ! -d $ONE_BAK ]; then mkdir $ONE_BAK; fi
@@ -33,6 +30,7 @@ case $key in
 
         cp $ONE_VAR/one.db $new_dir
         cp -R $ONE_VAR/.one $new_dir
+
         shift # past argument
         shift # past argument
         ;;
@@ -44,10 +42,14 @@ case $key in
             echo $id $i
             let "id+=1"
         done;
+
         shift # past argument
         ;;
     -n|--new)
+        /usr/bin/one stop
         new_model oneadmin opennebula
+        /usr/bin/one start
+
         shift # past argument
         ;;
     -c|--clean)
@@ -60,9 +62,11 @@ case $key in
             if [ $index -eq $i ]; then continue; fi
             rm -R $ONE_BAK/$folder
         done;
+
         shift # past argument
         ;;
     -r|--revert)
+        /usr/bin/one stop
         index_revert="$2"
         i=-1
         for dir in `ls -t $ONE_BAK`;
@@ -71,15 +75,24 @@ case $key in
             if [ $index_revert -eq $i ];
             then
                 path=$ONE_BAK/$dir
+
+                if [ -d "$DIRECTORY" ]; then
+                    rm -R $ONE_VAR/.one
+                fi
+
                 cp -R $path/.one $ONE_VAR/.one
                 cp $path/one.db $ONE_VAR/one.db
             fi
         done;
+
+        /usr/bin/one start
+
         shift # past argument
         shift # past value
         ;;
     --default)
         DEFAULT=YES
+
         shift # past argument
         ;;
     *)    # unknown option
